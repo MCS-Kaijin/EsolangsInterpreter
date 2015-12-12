@@ -79,9 +79,10 @@ def bf():
 
 # http://www.esolangs.org/wiki/Dark
 def dark():
-	global code, inp
+	global code, inp, dark_out
 	control_space, world_block, voicelist = [], [], []
 	obj_types = {}
+	dark_out = ''
 	
 	class sign(object):
 		def __init__(self, name):
@@ -318,7 +319,7 @@ def dark():
 		def chaos(self, args):
 			for var in world_block:
 				if var.manip == self and var.name == args[0]:
-					var.value = random.randint(0, (2^var.size)-1)
+					var.value = random.randint(0, (2^int(var.size))-1)
 		
 		def set(self, args):
 			for var in world_block:
