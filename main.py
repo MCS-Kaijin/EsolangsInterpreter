@@ -319,7 +319,7 @@ def dark():
 		def chaos(self, args):
 			for var in world_block:
 				if var.manip == self and var.name == args[0]:
-					var.value = random.randint(0, (2^int(var.size))-1)
+					var.value = random.randint(0, pow(2, int(var.size))-1)
 		
 		def set(self, args):
 			for var in world_block:
