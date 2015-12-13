@@ -2,8 +2,6 @@ import ui
 import re
 import random
 
-import sys
-
 # to appease the finicky UnboundLocalError
 dark_output = ''
 
@@ -111,7 +109,7 @@ def dark():
 				string = ''
 				for var in world_block:
 					if var.name == args[0]:
-						string = var.value
+						string = chr(var.value)
 						break
 				try: self.value += string
 				except: self.value = string
