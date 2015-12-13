@@ -2,6 +2,8 @@ import ui
 import re
 import random
 
+import sys
+
 # to appease the finicky UnboundLocalError
 dark_output = ''
 
@@ -79,10 +81,10 @@ def bf():
 
 # http://www.esolangs.org/wiki/Dark
 def dark():
-	global code, inp, dark_out
+	global code, inp, dark_output
 	control_space, world_block, voicelist = [], [], []
 	obj_types = {}
-	dark_out = ''
+	dark_output = ''
 	
 	class sign(object):
 		def __init__(self, name):
@@ -115,7 +117,7 @@ def dark():
 				except: self.value = string
 		
 		def red(self, args=['']):
-			voicelist.append(self.value)
+			voicelist.append(str(self.value))
 			if args[0] == '~': self.value = None
 		
 		def tear(self, args=[1]):
@@ -246,15 +248,15 @@ def dark():
 				elif case('<='): self.value = val1 <= val2
 				if case('!=') or case('<>'): self.value = val1 != val2
 			if not self.value:
-				w = args[3]
-				print w
-				return w
-				while not code.split('\n')[w] == self.name+'$balance' and not code.split('\n')[w] == self.name+'$reprogram': w += 1
-				return w
+				i = args[3]
+				return i
+				while not self.name+'$balance' in code.split('\n')[w] and not self.name+'$reprogram' in code.split('\n')[w]: w += 1
+				return i
 		
 		def balance(self, i):
 			if self.value:
-				while not code.split('\n')[i] == self.name+'$reprogram': i += 1
+				while not self.name+'$reprogram' in code.split('\n')[i]:
+					i += 1
 				return i
 		
 		def corpse(self, args):
