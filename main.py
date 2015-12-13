@@ -397,7 +397,7 @@ def dark():
 		tmp = re.match((r'\+(?P<objname>[\w]+) hell'), line)
 		if tmp: hell(tmp.group('objname'))
 		
-		tmp = re.match((r'(?P<objname>[^$]+)\$(?P<func_name>[\w]+) ?(?P<params>.*)'), line)
+		tmp = re.match((r'[\W]+(?P<objname>[^$]+)\$(?P<func_name>[\w]+) ?(?P<params>.*)'), line)
 		if tmp:
 			for item in control_space:
 				if item.name == tmp.group('objname'):
