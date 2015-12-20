@@ -415,10 +415,82 @@ def dark():
 	return dark_output
 
 
+# http://www.esolangs.org/wiki/DNA-Sharp
+def dnasharp():
+	global code, inp
+	output = ''
+	i = 0
+	alph = 'atgc'
+	commands = ['atat', 'atgc', 'atta', 'atcg', 'gcat', 'gcgc', 'gcta', 'gccg', 'taat', 'tagc', 'tata', 'tacg', 'cgat', 'cggc', 'cgta', 'cgcg']
+	cmd = ''
+	cmds = []
+	tape = []
+	tpos = 0
+	ipos = 0
+	tmp = re.findall((r'[\W]*/\*[^*]+\*/'), code)
+	for occurrence in tmp:
+		code = code.replace(occurrence, '')
+	tmp = []
+	for i in range(0, 256*2): tape.append(0)
+	i = 0
+	if len(code.split('\n')) > 1:
+		while i < len(code.split('\n')):
+			line = code.split('\n')[i]
+			is_odd = not float(i)/float(2) == round(i/2)
+			for char in line:
+				if char.lower() in alph: cmd += char
+			if is_odd:
+				if not cmd in commands: return 'Invalid command: lines {}-{}'.format(i, i-1)
+				cmds.append(cmd)
+				cmd = ''
+			i += 1
+	else:
+		while i < len(code):
+			cmd += code[i]
+			if len(cmd) >= 4:
+				cmds.append(cmd)
+				cmd = ''
+			i += 1
+	i = 0
+	while i < len(cmds):
+		cmd = cmds[i]
+		for case in switch(commands.index(cmd)):
+			if case(0):
+				tpos += 1
+				break
+			elif case(1):
+				tpos -= 1
+				break
+			elif case(2):
+				tape[tpos] += 1
+				break
+			elif case(3):
+				tape[tpos] -= 1
+				break
+			elif case(4):
+				output += chr(tape[tpos])
+				break
+			elif case(5):
+				tape[tpos] = ord(inp[ipos])
+				ipos += 1
+				break
+			elif case(6):
+				if tape[tpos] == 0:
+					while not cmds[i] == 'gccg': i += 1
+				else:
+					tmp.append(i)
+				break
+			elif case(7):
+				if not tape[tpos] == 0: i = tmp.pop()-1
+				break
+		i += 1
+	return output
+
 
 interpreters = {
                 'Brainf---': bf,
-                'Dark': dark
+                'Dark': dark,
+                'DNA#': dnasharp
                 }
 
 
@@ -430,8 +502,8 @@ def choose_language(sender):
 	gui.name = language
 	gui['tableview1'].alpha = 0
 
-gui['tableview1'].data_source = ui.ListDataSource(['Brainf---', 'Dark'])
-gui['tableview1'].delegate = ui.ListDataSource(['Brainf---', 'Dark'])
+gui['tableview1'].data_source = ui.ListDataSource(['Brainf---', 'Dark', 'DNA#'])
+gui['tableview1'].delegate = ui.ListDataSource(['Brainf---', 'Dark', 'DNA#'])
 gui['tableview1'].delegate.action = choose_language
 
 def intp(sender):
